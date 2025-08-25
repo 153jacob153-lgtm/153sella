@@ -602,7 +602,6 @@
       <div class="row">
         <div class="card grow">
           <div class="hud">
-            <div class="pill" id="hudBranch">지점</div>
             <div class="pill" id="hudPlayer">이름</div>
             <div class="pill" id="hudMode">모드</div>
             <div class="pill">문제 <span id="qIndex">1</span> / 10</div>
@@ -965,7 +964,6 @@
     state.player = document.getElementById('player').value.trim() || '무명';
     state.q=0; state.correct=0; state.bonus=0; state.current=null;
 
-    document.getElementById('hudBranch').textContent = '지점: '+state.branch;
     document.getElementById('hudPlayer').textContent = '이름: '+state.player;
     document.getElementById('hudMode').textContent = '모드: '+MODES[state.mode].label;
 
