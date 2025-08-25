@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>153sella 음악학원 | 계이름 퀴즈 게임</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#131a33; --ink:#e9ecf5; --muted:#aab3d3; --brand:#7ac6ff; --accent:#ffd166;
+      --ok:#7ae582; --bad:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Pretendard,Apple SD Gothic Neo,Noto Sans KR,'Noto Music','Segoe UI Symbol',sans-serif;background:linear-gradient(180deg,#0b1020,#0b1428 60%,#0b1020);color:var(--ink)}
+    header,footer{position:sticky;z-index:10;backdrop-filter:saturate(140%) blur(8px)}
+    header{top:0;background:rgba(19,26,51,.7);border-bottom:1px solid rgba(255,255,255,.08)}
+    footer{bottom:0;background:rgba(19,26,51,.7);border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+    .row{display:flex;gap:16px;flex-wrap:wrap}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .grow{flex:1 1 360px}
+    .title{font-weight:800;font-size:22px;margin:0 0 8px}
+    .muted{color:var(--muted)}
+    .selects{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:10px}
+    select,input[type="text"],input[type="month"]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#0f1430;color:var(--ink)}
+    button{cursor:pointer;border:0;border-radius:14px;padding:12px 16px;background:linear-gradient(90deg,#66d0ff,#8b8bff);color:#0b1020;font-weight:800;letter-spacing:.2px;box-shadow:0 6px 18px rgba(122,198,255,.35);transition:.2s}
+    button:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(122,198,255,.5)}
+    button.secondary{background:#1a2145;color:var(--ink);box-shadow:none;border:1px solid rgba(255,255,255,.12)}
+    button.success{background:linear-gradient(90deg,#6ee7b7,#a7f3d0);color:#132225}
+    button.warn{background:linear-gradient(90deg,#ffd166,#ff9f66);color:#2a1d0b}
+        .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:#111633;color:var(--muted);font-size:12px}
+    .answer-groups{display:flex;flex-direction:column;gap:8px}
+    .grid-answers{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+    .ans{padding:12px 8px;border-radius:12px;background:#0f1430;border:1px solid rgba(255,255,255,.12);font-weight:700;color:var(--ink)}
+    .ans.correct{outline:3px solid var(--ok); color:#fff; background:#16381f}
+    .ans.wrong{outline:3px solid var(--bad)}
+    .hud{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .big{font-size:28px;font-weight:900;letter-spacing:.4px}
+    .svgbox{width:100%;aspect-ratio:16/9;background:#0c1230;border:1px solid rgba(255,255,255,.08);border-radius:18px;display:flex;align-items:center;justify-content:center}
+    .leader{width:100%;border-collapse:collapse}
+    .leader th,.leader td{padding:8px 10px;border-bottom:1px dashed rgba(255,255,255,.12);text-align:left}
+    .tag{font-size:11px;padding:3px 8px;border-radius:999px;background:#13204a;border:1px solid rgba(255,255,255,.12)}
+    .small{font-size:12px}
+    .hidden{display:none}
+
+    /* ===== 새로운 단계별 디자인 스타일 ===== */
+    .main-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .main-title h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #7ac6ff, #8b8bff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    
+    .main-title p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 60px;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .feature-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.3);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    
+    .start-btn {
+      background: linear-gradient(135deg, #7ac6ff, #8b8bff);
+      color: #0b1020;
+      font-size: 1.2rem;
+      font-weight: 800;
+      padding: 20px 40px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(122,198,255,.4);
+    }
+    
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(122,198,255,.6);
+    }
+    
+    .start-btn span:first-child {
+      font-size: 1.5rem;
+    }
+    
+    /* 사용자 정보 입력 화면 */
+    .back-btn {
+      background: #2a2a2a;
+      color: var(--ink);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+      transition: background 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      background: #3a3a3a;
+    }
+    
+    .user-info-card {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 500px;
+      margin: 0 auto 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.1);
+      text-align: center;
+    }
+    
+    .user-icon {
+      font-size: 4rem;
+      margin-bottom: 24px;
+      color: #7ac6ff;
+    }
+    
+    .user-info-card h2 {
+      color: #333;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .user-info-card p {
+      color: #666;
+      margin-bottom: 32px;
+    }
+    
+    .input-group {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    
+    .input-group label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    
+    .input-desc {
+      color: #888 !important;
+      font-size: 0.9rem !important;
+      margin: 4px 0 8px !important;
+      text-align: left !important;
+    }
+    
+    .input-group select,
+    .input-group input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      background: white;
+      color: #333;
+    }
+    
+    .input-group select:focus,
+    .input-group input[type="text"]:focus {
+      outline: none;
+      border-color: #7ac6ff;
+    }
+    
+    .checkbox-label {
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      color: #333 !important;
+      font-weight: 600 !important;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #7ac6ff;
+    }
+    
+    .next-btn {
+      background: linear-gradient(135deg, #7ac6ff, #8b8bff);
+      color: white;
+      border: none;
+      padding: 18px 36px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 16px;
+    }
+    
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(122,198,255,.4);
+    }
+    
+    .info-tips {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .tip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(255,255,255,.05);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+    
+    .tip-icon {
+      font-size: 1.2rem;
+    }
+    
+    /* 게임 모드 선택 화면 */
+    .mode-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .mode-title h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    
+    .mode-title p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    
+    .modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .mode-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mode-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.3);
+      border-color: rgba(122,198,255,.3);
+    }
+    
+    .mode-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .mode-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    
+    .difficulty {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    
+    .difficulty.beginner { background: #4ade80; color: #064e3b; }
+    .difficulty.intermediate { background: #60a5fa; color: #1e3a8a; }
+    .difficulty.advanced { background: #fbbf24; color: #78350f; }
+    .difficulty.expert { background: #f97316; color: #7c2d12; }
+    .difficulty.master { background: #ef4444; color: #7f1d1d; }
+    
+    .mode-desc {
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .mode-details {
+      margin-bottom: 20px;
+    }
+    
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    .detail-value {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    
+    .mode-tip {
+      background: rgba(122,198,255,.1);
+      border: 1px solid rgba(122,198,255,.2);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .tip-label {
+      color: #7ac6ff;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    
+    .mode-tip span:last-child {
+      color: var(--ink);
+    }
+    
+    /* 점수 화면 */
+    .scores-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(180deg,#66d0ff,#7ac6ff 60%,#8b8bff);display:flex;align-items:center;justify-content:center;color:#0b1020;font-weight:900">153</div>
+        <div>
+          <div style="font-weight:900">153sella 음악학원 · 계이름 퀴즈</div>
+          <div class="small muted">브랜드 학습도구 · 각 화면 하단에 153sella 로고 고정</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="showScores" class="secondary small">📊 점수 보기</button>
+        <div class="pill">Made for 153sella Music Academy</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app">
+    <!-- INTRO (1/3) -->
+    <section id="intro" class="row">
+      <div class="card grow">
+        <h2 class="title">시작하기</h2>
+        <p class="muted">지점을 선택하고 이름을 입력한 뒤 게임 모드를 고르세요. 모든 단계는 10문제입니다.</p>
+        <div class="selects" style="margin:12px 0 16px">
+          <div>
+            <label class="small muted">지점 선택</label>
+            <select id="branch">
+              <option>매곡점</option>
+              <option>천상점</option>
+              <option>강동점</option>
+              <option>화봉점</option>
+              <option>양정점</option>
+              <option>천곡점</option>
+              <option>야음점</option>
+              <option>무거점</option>
+              <option>주촌점</option>
+              <option>연산1점</option>
+            </select>
+          </div>
+          <div>
+            <label class="small muted">이름</label>
+            <input id="player" type="text" placeholder="이름을 입력하세요" />
+          </div>
+        </div>
+        <div class="row" style="align-items:center">
+          <div class="pill">답안: (더 낮은/낮은/가온/높은) + 도·레·미·파·솔·라·시</div>
+          <label style="display:flex;align-items:center;gap:8px;margin-left:auto" class="small muted">
+            <input type="checkbox" id="ttsToggle" checked> 정답 음성(TTS)
+          </label>
+        </div>
+        <div style="height:8px"></div>
+        <button id="goMode" class="next-btn">🎮 게임 모드 선택하기</button>
+      </div>
+
+      <div class="card grow">
+        <h3 class="title">지점별 최근 기록</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="tag">로컬 저장(브라우저)</span>
+          <button class="secondary small" id="clearLocal">🔒 전체 기록 초기화</button>
+          <button class="secondary small" id="exportCsv">CSV 내보내기</button>
+        </div>
+        <table class="leader" id="tableScores">
+          <thead><tr><th>날짜</th><th>지점</th><th>이름</th><th>모드</th><th>정답/10</th><th>점수</th><th>시간보너스</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="height:14px"></div>
+        <h3 class="title">월간 랭킹</h3>
+        <div class="row" style="align-items:center">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <label class="small muted">월 선택
+              <input id="monthPicker" type="month" style="margin-left:8px"/>
+            </label>
+            <label class="small muted">지점
+              <select id="rankBranch" style="margin-left:8px">
+                <option value="ALL">전체</option>
+                <option>매곡점</option>
+                <option>천상점</option>
+                <option>강동점</option>
+                <option>화봉점</option>
+                <option>양정점</option>
+                <option>천곡점</option>
+                <option>야음점</option>
+                <option>무거점</option>
+                <option>주촌점</option>
+                <option>연산1점</option>
+              </select>
+            </label>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="secondary small" id="resetMonth">🔒 선택 월 전체 리셋</button>
+            <button class="secondary small" id="resetMonthBranch">🔒 선택 월·지점 리셋</button>
+          </div>
+        </div>
+        <div style="height:8px"></div>
+        <table class="leader" id="monthlyBoard">
+          <thead><tr><th>#</th><th>지점</th><th>이름</th><th>최고점</th><th>라운드수</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+
+
+    <!-- MODE SELECT (3/3) -->
+    <section id="mode" class="hidden">
+      <div class="card">
+        <button id="backToIntro" class="secondary" style="margin-bottom:16px">← 메인으로 돌아가기</button>
+        <h2 class="title">게임 모드를 선택하세요</h2>
+        <p class="muted">난이도에 따라 다른 음역대와 시간 제한이 적용됩니다</p>
+        <div class="modes">
+          <div class="mode-card">
+            <h3>초급 <span class="pill">BEGINNER</span></h3>
+            <div class="muted">높은음자리표, 가온도~높은도 / 30초 / 10문제</div>
+            <div style="height:8px"></div>
+            <button class="mode" data-mode="beginner">시작</button>
+          </div>
+          <div class="mode-card">
+            <h3>중급 <span class="pill">INTERMEDIATE</span></h3>
+            <div class="muted">낮은음자리표, 낮은도~가온도 / 25초 / 10문제</div>
+            <div style="height:8px"></div>
+            <button class="mode" data-mode="inter">시작</button>
+          </div>
+          <div class="mode-card">
+            <h3>고급 <span class="pill">ADVANCED</span></h3>
+            <div class="muted">Treble+Bass(오선 내부) / 20초 / 10문제</div>
+            <div style="height:8px"></div>
+            <button class="mode" data-mode="advanced">시작</button>
+          </div>
+          <div class="mode-card">
+            <h3>전문가 <span class="pill">EXPERT</span></h3>
+            <div class="muted">두 음자리표(오선 내부) / 20초 / 10문제</div>
+            <div style="height:8px"></div>
+            <button class="mode" data-mode="expert">시작</button>
+          </div>
+          <div class="mode-card">
+            <h3>마스터 <span class="pill">MASTER</span></h3>
+            <div class="muted">덧줄 영역 랜덤 / 20초 / 10문제</div>
+            <div style="height:8px"></div>
+            <button class="mode" data-mode="master">시작</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCORES SCREEN -->
+    <section id="scores" class="hidden">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <h2 class="title">📊 점수 기록 및 랭킹</h2>
+          <div style="display:flex;gap:8px">
+            <button id="backToIntroFromScores" class="secondary">← 메인으로</button>
+            <button id="backToModeFromScores" class="secondary">← 게임 모드로</button>
+          </div>
+        </div>
+        
+        <h3 class="title">지점별 최근 기록</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="tag">로컬 저장(브라우저)</span>
+          <button class="secondary small" id="clearLocal">🔒 전체 기록 초기화</button>
+          <button class="secondary small" id="exportCsv">CSV 내보내기</button>
+        </div>
+        <table class="leader" id="tableScores">
+          <thead><tr><th>날짜</th><th>지점</th><th>이름</th><th>모드</th><th>정답/10</th><th>점수</th><th>시간보너스</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="height:14px"></div>
+        <h3 class="title">월간 랭킹</h3>
+        <div class="row" style="align-items:center">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <label class="small muted">월 선택
+              <input id="monthPicker" type="month" style="margin-left:8px"/>
+            </label>
+            <label class="small muted">지점
+              <select id="rankBranch" style="margin-left:8px">
+                <option value="ALL">전체</option>
+                <option>매곡점</option><option>천상점</option><option>강동점</option><option>화봉점</option><option>양정점</option><option>천곡점</option><option>야음점</option><option>무거점</option><option>주촌점</option><option>연산1점</option>
+              </select>
+            </label>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="secondary small" id="resetMonth">🔒 선택 월 전체 리셋</button>
+            <button class="secondary small" id="resetMonthBranch">🔒 선택 월·지점 리셋</button>
+          </div>
+        </div>
+        <div style="height:8px"></div>
+        <table class="leader" id="monthlyBoard">
+          <thead><tr><th>#</th><th>지점</th><th>이름</th><th>최고점</th><th>라운드수</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game" class="hidden">
+      <div class="row">
+        <div class="card grow">
+          <div class="hud">
+            <div class="pill" id="hudBranch">지점</div>
+            <div class="pill" id="hudPlayer">이름</div>
+            <div class="pill" id="hudMode">모드</div>
+            <div class="pill">문제 <span id="qIndex">1</span> / 10</div>
+            <div class="pill">남은시간 <span id="timer" class="big">20.0</span>s</div>
+            <div class="pill">정답 <span id="correct">0</span></div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="svgbox">
+            <svg id="staff" viewBox="0 0 800 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-label="오선악보">
+              <!-- draw dynamically -->
+            </svg>
+          </div>
+          <div style="height:12px"></div>
+          <div class="answer-groups" id="answers"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+            <button class="secondary" id="btnQuit">그만하기</button>
+            <button class="warn" id="btnSkip">모르겠어요(건너뛰기)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="result" class="hidden">
+      <div class="card">
+        <h2 class="title">결과</h2>
+        <p class="muted">수고했어요! 아래 기록을 저장했어요.</p>
+        <div class="row" style="align-items:center;gap:12px">
+          <div class="pill">지점: <b id="rBranch" style="margin-left:6px"></b></div>
+          <div class="pill">이름: <b id="rPlayer" style="margin-left:6px"></b></div>
+          <div class="pill">모드: <b id="rMode" style="margin-left:6px"></b></div>
+          <div class="pill">정답: <b id="rCorrect" style="margin-left:6px"></b> / 10</div>
+          <div class="pill">시간 보너스: <b id="rBonus" style="margin-left:6px"></b></div>
+          <div class="pill">총점: <b id="rScore" style="margin-left:6px"></b></div>
+        </div>
+        <div style="height:12px"></div>
+        <div class="row">
+          <button id="again" class="success">같은 모드로 다시 하기</button>
+          <button id="toMode" class="secondary">모드 선택으로</button>
+          <button id="toIntro" class="secondary">메인으로</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
+      <div>© 153sella 음악학원 · 계이름 퀴즈</div>
+      <div class="small">브랜드 노출 고정 영역 · 학원 내 키오스크/태블릿/PC 브라우저에서 실행</div>
+    </div>
+  </footer>
+
+  <script>
+  // ===== 엔진/랭킹/관리자/자동리셋 (7지 보기 + 덧줄 규칙 + 자동 점수) =====
+
+  const NOTE_NAMES = ["도","레","미","파","솔","라","시"]; // C D E F G A B
+
+  // staffIndex: 0..8 = 오선 내부(라인/칸), -1 아래칸, -2 첫 아랫덧줄, -3 두번째 아래칸, -4 두번째 아랫덧줄,
+  // 9 위칸, 10 첫 윗덧줄, 11 두번째 위칸 ...
+  // Treble 기준: -2 -> C4(가온 도), Bass 기준: 3 -> C3(낮은 도)
+  const CLEF = {
+    treble: {
+      name: "높은음자리표",
+      cIndex: -2,  // C4 index
+      baseOct: 4,
+      staffIndexToY(i){ const top=150,gap=18; const bottom=top+4*gap; return bottom - i*(gap/2); },
+      ranges: {
+        beginner:   { min: -2, max: 5 },
+        advanced:   { min:  0, max: 8 },
+        expert:     { min:  0, max: 8 },
+        masterLow:  { min: -6, max: -1 },
+        masterHigh: { min:  9, max: 16 },
+      }
+    },
+    bass: {
+      name: "낮은음자리표",
+      cIndex: 3,   // C3 index
+      baseOct: 3,
+      staffIndexToY(i){ const top=150,gap=18; const bottom=top+4*gap; return bottom - i*(gap/2); },
+      ranges: {
+        inter:      { min:  3, max: 10 },
+        advanced:   { min:  0, max:  8 },
+        expert:     { min:  0, max:  8 },
+        masterLow:  { min: -6, max: -1 },
+        masterHigh: { min:  9, max: 16 },
+      }
+    }
+  };
+
+  const MODES = {
+    beginner: { label: "초급", seconds: 30, clefs:['treble'], rangeKeys:['beginner'], gen(){ return genInRange('treble','beginner'); } },
+    inter:    { label: "중급", seconds: 25, clefs:['bass'],   rangeKeys:['inter'],    gen(){ return genInRange('bass','inter'); } },
+    advanced: { label: "고급", seconds: 30, clefs:['treble','bass'], rangeKeys:['advanced'], gen(){ const c=Math.random()<0.5?'treble':'bass'; return genInRange(c,'advanced'); } },
+    expert:   { label: "전문가", seconds: 30, clefs:['treble','bass'], rangeKeys:['expert'],   gen(){ const c=Math.random()<0.5?'treble':'bass'; return genInRange(c,'expert'); } },
+    master:   { label: "마스터", seconds: 30, clefs:['treble','bass'], rangeKeys:['masterLow','masterHigh'], gen(){ const c=Math.random()<0.5?'treble':'bass'; const z=Math.random()<0.5?'masterLow':'masterHigh'; return genInRange(c,z); } },
+  };
+
+  // ===== DOM =====
+  const svg = document.getElementById('staff');
+  const answersBox = document.getElementById('answers');
+  const qIndex = document.getElementById('qIndex');
+  const correctEl = document.getElementById('correct');
+  const timerEl = document.getElementById('timer');
+
+  // ===== 상태 =====
+  const state = { mode:'beginner', branch:'매곡점', player:'', q:0, correct:0, bonus:0, current:null, timerId:null, tLeft:0 };
+
+  // ===== 유틸 =====
+  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min }
+  function mod(n,m){ return ((n%m)+m)%m }
+  function nowMonthKey(d=new Date()){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+  function getMonthKeyFromISO(iso){ const d = new Date(iso); return nowMonthKey(d); }
+
+  // 옥타브 접두어
+  function octavePrefix(o){ if(o<=2) return '더 낮은'; if(o===3) return '낮은'; if(o===4) return '가온'; return '높은'; }
+
+  // ===== 계이름 산출 (예외 없는 정확한 계산) =====
+  function noteInfo(clefKey, staffIndex){
+    const c = CLEF[clefKey];
+    const di = staffIndex - c.cIndex;         // 기준 C로부터의 7음계 오프셋
+    const letterIndex = mod(di,7);             // 0=C(도) .. 6=B(시)
+    const octave = c.baseOct + Math.floor(di/7);
+    const name = NOTE_NAMES[letterIndex];
+    const label = `${octavePrefix(octave)} ${name}`;
+    return { name, octave, label };
+  }
+
+  // ===== 출제 =====
+  function genInRange(clefKey, rangeKey){
+    const clef = CLEF[clefKey];
+    const r = clef.ranges[rangeKey];
+    const idx = randInt(r.min, r.max);
+    const info = noteInfo(clefKey, idx);
+    return { clef: clefKey, staffIndex: idx, name: info.label };
+  }
+
+  // ===== 보기 풀 생성(모드별 전체 가능한 라벨) =====
+  function allAnswerLabelsForMode(modeKey){
+    const m = MODES[modeKey];
+    const set = new Set();
+    m.clefs.forEach(clefKey=>{
+      m.rangeKeys.forEach(rk=>{
+        const r = CLEF[clefKey].ranges[rk];
+        for(let i=r.min; i<=r.max; i++){
+          const info = noteInfo(clefKey, i);
+          set.add(info.label);
+        }
+      });
+    });
+    return Array.from(set);
+  }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  // ===== SVG 렌더 =====
+  function drawStaffFrame(){
+    svg.innerHTML='';
+    const bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',800); bg.setAttribute('height',450);
+    bg.setAttribute('rx',18); bg.setAttribute('fill','#0b1230');
+    svg.appendChild(bg);
+
+    const title = document.createElementNS('http://www.w3.org/2000/svg','text');
+    title.setAttribute('x',400); title.setAttribute('y',60); title.setAttribute('text-anchor','middle');
+    title.setAttribute('fill','#e9ecf5'); title.setAttribute('font-size','22'); title.setAttribute('font-weight','800');
+    title.textContent = '이 음표의 계이름은 무엇일까요?';
+    svg.appendChild(title);
+
+    const top = 150, gap = 18;
+    for(let i=0;i<5;i++){
+      const y = top + i*gap;
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',120); line.setAttribute('x2',680); line.setAttribute('y1',y); line.setAttribute('y2',y);
+      line.setAttribute('stroke','#334'); line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+    }
+  }
+
+  function drawClefSymbol(clefKey){
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',100); t.setAttribute('y',200); t.setAttribute('fill','#e9ecf5');
+    t.setAttribute('font-size','96'); t.setAttribute('font-family',"'Noto Music','Segoe UI Symbol',serif");
+    // 𝄞 (U+1D11E), 𝄢 (U+1D122)
+    t.textContent = clefKey==='treble' ? '𝄞' : '𝄢';
+    svg.appendChild(t);
+  }
+
+  function staffIndexToY(clefKey, i){ return CLEF[clefKey].staffIndexToY(i); }
+
+  // 덧줄 간격=오선 칸 간격(gap/2), 표시 규칙 반영
+  function drawNote(clefKey, staffIndex){
+    const x = 420; 
+    const y = staffIndexToY(clefKey, staffIndex);
+
+    const note = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    note.setAttribute('cx', x); note.setAttribute('cy', y); note.setAttribute('rx', 16); note.setAttribute('ry', 12);
+    note.setAttribute('fill','#e9ecf5'); note.setAttribute('stroke','#111'); note.setAttribute('stroke-width','2');
+    svg.appendChild(note);
+
+    // through=true: 온음표 정중앙을 덧줄이 지나감 / false: 음표와 겹치지 않게 딱 붙게(조금 짧게)
+    function addLedger(ly, through=false){
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      const pad = through ? 30 : 26;
+      line.setAttribute('x1', x-pad); line.setAttribute('x2', x+pad); line.setAttribute('y1', ly); line.setAttribute('y2', ly);
+      line.setAttribute('stroke','#556'); line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+    }
+
+    if(staffIndex < 0){
+      if(staffIndex === -1) return; // 첫 아래칸: 덧줄 X
+      if(staffIndex === -2){ addLedger(staffIndexToY(clefKey,-2), true); return; }  // 첫 아랫덧줄: 중앙 통과
+      if(staffIndex === -3){ addLedger(staffIndexToY(clefKey,-2), false); return; } // 두번째 아래칸: 안쪽 덧줄만
+      for(let i=-2;i>=staffIndex;i--){
+        if(i%2===0){ addLedger(staffIndexToY(clefKey,i), true); }      // 덧줄 위(짝수): 중앙 통과
+        else       { addLedger(staffIndexToY(clefKey,i+1), false); i--; } // 칸(홀수): 인접 덧줄만
+      }
+    } else if(staffIndex > 8){
+      if(staffIndex === 9) return; // 첫 위칸: 덧줄 X
+      if(staffIndex === 10){ addLedger(staffIndexToY(clefKey,10), true); return; }  // 첫 윗덧줄: 중앙 통과
+      if(staffIndex === 11){ addLedger(staffIndexToY(clefKey,10), false); return; } // 두번째 위칸: 안쪽 덧줄만
+      for(let i=10;i<=staffIndex;i++){
+        if(i%2===0){ addLedger(staffIndexToY(clefKey,i), true); }       // 덧줄 위(짝수): 중앙 통과
+        else       { addLedger(staffIndexToY(clefKey,i-1), false); i++; } // 칸(홀수): 인접 덧줄만
+      }
+    }
+  }
+
+  function renderProblem(prob){
+    drawStaffFrame();
+    drawClefSymbol(prob.clef);
+    drawNote(prob.clef, prob.staffIndex);
+    const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x',720); label.setAttribute('y',60); label.setAttribute('fill','#aab3d3'); label.setAttribute('font-size','14'); label.setAttribute('text-anchor','end');
+    label.textContent = `문제 ${state.q+1} / 10`;
+    svg.appendChild(label);
+  }
+
+  // ===== 8지 보기 생성 (초급/중급) 또는 7지 보기 (고급 이상) =====
+  function makeAnswerButtons(prob){
+    answersBox.innerHTML='';
+    const correct = prob.name;                      // "가온 도" 등
+    
+    let options;
+    
+    if (state.mode === 'beginner') {
+      // 초급: 가온도~높은도 순서로 고정된 8개 답지
+      options = generateFixedBeginnerAnswers(correct);
+    } else if (state.mode === 'inter') {
+      // 중급: 낮은도~가온도 순서로 고정된 8개 답지
+      options = generateFixedIntermediateAnswers(correct);
+    } else {
+      // 고급 이상: 7개 답지 (정답 1개 + 오답 6개)
+      const pool = allAnswerLabelsForMode(state.mode).filter(x => x !== correct);
+      shuffle(pool);
+      const distractors = pool.slice(0, 6);         // 오답 6개
+      options = shuffle([correct, ...distractors]); // 총 7개, 랜덤 순서
+    }
+
+    const row = document.createElement('div');
+    row.className = 'grid-answers';
+    options.forEach(label=>{
+      const b = document.createElement('button');
+      b.className = 'ans';
+      b.textContent = label;
+      b.onclick = ()=> onAnswer(label);
+      row.appendChild(b);
+    });
+    answersBox.appendChild(row);
+  }
+
+
+
+  // 초급용 고정 답지 생성 (가온도~높은도 순서)
+  function generateFixedBeginnerAnswers(correctAnswer) {
+    const fixedOrder = [
+      '가온 도', '가온 레', '가온 미', '가온 파', '가온 솔', '가온 라', '가온 시',
+      '높은 도'
+    ];
+    
+    // 정답이 고정 순서에 포함되어 있지 않다면, 첫 번째 위치에 정답을 넣고 마지막 하나 제거
+    if (!fixedOrder.includes(correctAnswer)) {
+      return [correctAnswer, ...fixedOrder.slice(0, 7)];
+    }
+    
+    return fixedOrder;
+  }
+
+  // 중급용 고정 답지 생성 (낮은도~가온도 순서)
+  function generateFixedIntermediateAnswers(correctAnswer) {
+    const fixedOrder = [
+      '낮은 도', '낮은 레', '낮은 미', '낮은 파', '낮은 솔', '낮은 라', '낮은 시',
+      '가온 도'
+    ];
+    
+    // 정답이 고정 순서에 포함되어 있지 않다면, 첫 번째 위치에 정답을 넣고 마지막 하나 제거
+    if (!fixedOrder.includes(correctAnswer)) {
+      return [correctAnswer, ...fixedOrder.slice(0, 7)];
+    }
+    
+    return fixedOrder;
+  }
+
+  function speak(text){
+    if(!document.getElementById('ttsToggle').checked) return;
+    const synth = window.speechSynthesis; if(!synth) return;
+    const ut = new SpeechSynthesisUtterance(text);
+    ut.lang = 'ko-KR'; ut.rate = 1.0; ut.pitch=1.0;
+    synth.cancel(); synth.speak(ut);
+  }
+
+  // ===== 게임 흐름 =====
+  function nextQuestion(){
+    console.log('nextQuestion called, q:', state.q);
+    if(state.q>=10){ 
+      console.log('Game completed! Calling endGame...');
+      endGame(); 
+      return; 
+    }
+    const prob = MODES[state.mode].gen();
+    state.current = prob;
+    renderProblem(prob);
+    makeAnswerButtons(prob);          // ← 매 문제 7지 보기 표시
+    qIndex.textContent = String(state.q+1);
+  }
+
+  function onAnswer(ans){
+    const correctName = state.current.name; // 예: "가온 도"
+    const btns = [...document.querySelectorAll('.ans')];
+    btns.forEach(b=> b.disabled=true);
+    const picked = btns.find(b=> b.textContent===ans);
+    const isCorrect = (ans===correctName);
+    if(isCorrect){ state.correct++; speak('정답! '+ans); picked?.classList.add('correct'); }
+    else { speak('아쉬워요. 정답은 '+(correctName||'정답없음')); picked?.classList.add('wrong'); }
+    correctEl.textContent = state.correct;
+    setTimeout(()=>{ btns.forEach(b=> b.disabled=false); state.q++; nextQuestion(); }, 600);
+  }
+
+  function startTimer(){
+    clearInterval(state.timerId);
+    const total = MODES[state.mode].seconds;
+    state.tLeft = total;
+    timerEl.textContent = total.toFixed(1);
+    const start = performance.now();
+    state.timerId = setInterval(()=>{
+      const elapsed = (performance.now()-start)/1000;
+      const left = Math.max(0, total - elapsed);
+      state.tLeft = left; timerEl.textContent = left.toFixed(1);
+      if(left<=0){ clearInterval(state.timerId); endGame(); }
+    }, 100);
+  }
+
+  function startGame(mode){
+    state.mode = mode;
+    state.branch = document.getElementById('branch').value;
+    state.player = document.getElementById('player').value.trim() || '무명';
+    state.q=0; state.correct=0; state.bonus=0; state.current=null;
+
+    document.getElementById('hudBranch').textContent = '지점: '+state.branch;
+    document.getElementById('hudPlayer').textContent = '이름: '+state.player;
+    document.getElementById('hudMode').textContent = '모드: '+MODES[state.mode].label;
+
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('mode').classList.add('hidden');
+    document.getElementById('result').classList.add('hidden');
+    document.getElementById('game').classList.remove('hidden');
+
+    drawStaffFrame(); startTimer(); nextQuestion(); // 보기 생성은 nextQuestion 내부에서
+  }
+
+  function endGame(){
+    console.log('endGame called!', {q: state.q, correct: state.correct, bonus: state.tLeft});
+    clearInterval(state.timerId);
+    const bonus = Math.round(state.tLeft*2);
+    const score = state.correct*10 + bonus;
+    state.bonus = bonus;
+    const rec = {date:new Date().toISOString(), branch:state.branch, player:state.player, mode:MODES[state.mode].label, correct:state.correct, bonus, score};
+    console.log('Game record:', rec);
+    saveScore(rec);
+    fillResult(rec);
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('result').classList.remove('hidden');
+    console.log('Result screen should be visible now');
+  }
+
+  // 결과 화면 채우기
+  function fillResult(rec){
+    console.log('fillResult called with:', rec);
+    try {
+      document.getElementById('rBranch').textContent = rec.branch;
+      document.getElementById('rPlayer').textContent = rec.player;
+      document.getElementById('rMode').textContent = rec.mode;
+      document.getElementById('rCorrect').textContent = rec.correct;
+      document.getElementById('rBonus').textContent = `+${rec.bonus}`;
+      document.getElementById('rScore').textContent = rec.score;
+      console.log('Result screen filled successfully');
+    } catch (error) {
+      console.error('Error filling result screen:', error);
+    }
+  }
+
+  // ===== 기록/랭킹 (localStorage) + 관리자 =====
+  const KEY='sella_note_quiz_scores_v3';
+  const LAST_RESET_KEY='sella_note_quiz_last_reset_month';
+  const ADMIN_PIN='0000';
+  let isAdmin=false;
+  function withAdmin(action){ if(isAdmin){ action(); return; } const pin=prompt('관리자 비밀번호(4자리)를 입력하세요'); if(pin===null) return; if(pin===ADMIN_PIN){ isAdmin=true; action(); } else alert('비밀번호가 올바르지 않습니다.'); }
+
+  function loadScores(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
+  function saveScore(s){ const arr = loadScores(); arr.unshift(s); localStorage.setItem(KEY, JSON.stringify(arr.slice(0,500))); renderScores(); renderMonthlyBoard(); }
+
+  function renderScores(){
+    const arr = loadScores();
+    const tbody = document.querySelector('#tableScores tbody');
+    if(!tbody) return;
+    tbody.innerHTML='';
+    arr.slice(0,20).forEach(r=>{
+      const d = new Date(r.date);
+      const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${ds}</td><td>${r.branch}</td><td>${r.player}</td><td>${r.mode}</td><td>${r.correct}</td><td>${r.score}</td><td>+${r.bonus}</td>`;
+      tbody.appendChild(tr);
+    })
+  }
+
+  function renderMonthlyBoard(){
+    const monthEl = document.getElementById('monthPicker');
+    const branchEl = document.getElementById('rankBranch');
+    if(!monthEl) return;
+    const monthKey = monthEl.value || nowMonthKey();
+    const branchFilter = branchEl.value || 'ALL';
+
+    const arr = loadScores().filter(r => getMonthKeyFromISO(r.date) === monthKey);
+    const filtered = branchFilter==='ALL' ? arr : arr.filter(r=> r.branch === branchFilter);
+
+    const map = new Map();
+    filtered.forEach(r=>{
+      const key = `${r.branch}|${r.player}`;
+      if(!map.has(key)){ map.set(key, {branch:r.branch, player:r.player, best:r.score, rounds:1}); }
+      else{ const g = map.get(key); g.best = Math.max(g.best, r.score); g.rounds += 1; }
+    });
+
+    const rows = [...map.values()].sort((a,b)=> b.best - a.best).slice(0,20);
+    const tbody = document.querySelector('#monthlyBoard tbody');
+    if(!tbody) return;
+    tbody.innerHTML='';
+    rows.forEach((g,i)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${i+1}</td><td>${g.branch}</td><td>${g.player}</td><td>${g.best}</td><td>${g.rounds}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 리셋
+  function resetMonthData(monthKey){ const arr = loadScores(); const next = arr.filter(r => getMonthKeyFromISO(r.date) !== monthKey); localStorage.setItem(KEY, JSON.stringify(next)); localStorage.setItem(LAST_RESET_KEY, monthKey); renderScores(); renderMonthlyBoard(); }
+  function resetMonthAll(){ const monthEl=document.getElementById('monthPicker'); const monthKey = monthEl.value || nowMonthKey(); resetMonthData(monthKey); alert(`${monthKey} 월 기록이 모두 삭제되었습니다.`); }
+  function resetMonthBranch(){ const monthEl=document.getElementById('monthPicker'); const branchEl=document.getElementById('rankBranch'); const monthKey=monthEl.value || nowMonthKey(); const branch=branchEl.value; if(branch==='ALL'){ alert('지점을 선택해주세요. (월 전체 리셋은 좌측 버튼 사용)'); return; } const arr=loadScores(); const next=arr.filter(r=> !(getMonthKeyFromISO(r.date)===monthKey && r.branch===branch)); localStorage.setItem(KEY, JSON.stringify(next)); renderScores(); renderMonthlyBoard(); alert(`${monthKey} 월 ${branch} 기록이 삭제되었습니다.`); }
+
+  // 자동 리셋 스케줄러 (매월 1일 00:00)
+  function scheduleNextMonthlyReset(){
+    const now=new Date(); const y=now.getFullYear(); const m=now.getMonth();
+    const next=(m===11)? new Date(y+1,0,1,0,0,0,0) : new Date(y,m+1,1,0,0,0,0);
+    const ms=next-now;
+    setTimeout(()=>{
+      const currentMonth = nowMonthKey(new Date());
+      resetMonthData(currentMonth);
+      scheduleNextMonthlyReset();
+    }, ms);
+  }
+  function ensureMonthlyResetOnStartup(){
+    const current=nowMonthKey();
+    const last=localStorage.getItem(LAST_RESET_KEY);
+    if(last!==current){ resetMonthData(current); }
+  }
+
+  // ===== 화면 전환 함수 =====
+  function showIntro() {
+    document.getElementById('intro').classList.remove('hidden');
+    document.getElementById('mode').classList.add('hidden');
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('result').classList.add('hidden');
+    document.getElementById('scores').classList.add('hidden');
+    renderScores();
+    renderMonthlyBoard();
+  }
+  
+
+  
+  function showMode() {
+    // 사용자 정보 검증
+    const branch = document.getElementById('branch').value;
+    const player = document.getElementById('player').value.trim();
+    
+    if (!player) {
+      alert('이름을 입력해주세요.');
+      return;
+    }
+    
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('mode').classList.remove('hidden');
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('result').classList.add('hidden');
+    document.getElementById('scores').classList.add('hidden');
+  }
+  
+  function selectMode(mode) {
+    startGame(mode);
+  }
+  
+  function showScores() {
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('mode').classList.add('hidden');
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('result').classList.add('hidden');
+    document.getElementById('scores').classList.remove('hidden');
+    renderScores();
+    renderMonthlyBoard();
+  }
+
+  // ===== 이벤트 바인딩 =====
+  function bindEvents() {
+    // 메인 화면 이동
+    document.getElementById('goMode').onclick = () => showMode();
+    document.getElementById('showScores').onclick = () => showScores();
+    
+    // 게임 모드 화면 이동
+    document.getElementById('backToIntro').onclick = () => showIntro();
+    document.getElementById('toMode').onclick = () => showMode();
+    document.getElementById('toIntro').onclick = () => showIntro();
+    
+    // 점수 보기 화면에서 돌아가기
+    document.getElementById('backToIntroFromScores').onclick = () => showIntro();
+    document.getElementById('backToModeFromScores').onclick = () => showMode();
+    
+    // 게임 화면 컨트롤
+    document.getElementById('btnQuit').onclick=()=>{ clearInterval(state.timerId); showIntro(); };
+    document.getElementById('btnSkip').onclick=()=>{ state.q++; nextQuestion(); };
+    document.getElementById('again').onclick=()=> startGame(state.mode);
+    
+    // 게임 모드 버튼들에 대한 이벤트 바인딩
+    document.querySelectorAll('.mode').forEach(btn => {
+      btn.addEventListener('click', () => startGame(btn.dataset.mode));
+    });
+  }
+
+  // CSV 내보내기
+  document.getElementById('exportCsv').onclick = () => {
+    const arr = loadScores();
+    const header = ['date','branch','player','mode','correct','bonus','score'];
+    const esc = (v) => `"${String(v).replace(/"/g, '""')}"`;
+    const lines = [ header.join(','), ...arr.map(r => header.map(h => esc(r[h])).join(',')) ];
+    const blob = new Blob(["\uFEFF" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = '153sella_note_quiz_scores.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById('clearLocal').onclick=()=> withAdmin(()=>{ localStorage.removeItem(KEY); renderScores(); renderMonthlyBoard(); alert('전체 기록이 삭제되었습니다.'); });
+  document.getElementById('resetMonth').onclick = ()=> withAdmin(resetMonthAll);
+  document.getElementById('resetMonthBranch').onclick = ()=> withAdmin(resetMonthBranch);
+  document.getElementById('monthPicker').onchange = renderMonthlyBoard;
+  document.getElementById('rankBranch').onchange = renderMonthlyBoard;
+
+
+
+  // 초기화
+  (function init(){
+    const m=nowMonthKey();
+    const monthEl=document.getElementById('monthPicker');
+    if(monthEl) monthEl.value=m;
+    renderScores(); renderMonthlyBoard(); drawStaffFrame();
+    ensureMonthlyResetOnStartup();
+    scheduleNextMonthlyReset();
+    window.addEventListener('focus', ensureMonthlyResetOnStartup);
+    
+    // 이벤트 바인딩
+    bindEvents();
+    
+    // TTS 항상 체크
+    const ttsToggle = document.getElementById('ttsToggle');
+    if(ttsToggle) ttsToggle.checked = true;
+    
+    // 게임 모드 버튼들에 대한 이벤트 바인딩을 다시 한번 확실하게
+    setTimeout(() => {
+      const modeButtons = document.querySelectorAll('.mode');
+      console.log('Found mode buttons:', modeButtons.length);
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          console.log('Mode button clicked:', btn.dataset.mode);
+          startGame(btn.dataset.mode);
+        });
+      });
+    }, 200);
+    
+    // 첫화면부터 시작
+    showIntro();
+  })();
+  </script>
+</body>
+</html>
